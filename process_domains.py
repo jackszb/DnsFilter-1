@@ -4,6 +4,14 @@ suffix = []   # 精确域名（不含通配符）
 wildcard = [] # 包含通配符的域名
 ignored = []  # 被忽略的域名/IP
 
+# 清空旧的输出文件
+with open('suffix.txt', 'w') as f:
+    pass
+with open('wildcard.txt', 'w') as f:
+    pass
+with open('ignored.txt', 'w') as f:
+    pass
+
 # 读取过滤列表
 with open('filter.txt', 'r') as f:
     lines = f.readlines()
