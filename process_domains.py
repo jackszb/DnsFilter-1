@@ -40,11 +40,6 @@ for line in lines:
         ignored.append(line)
         continue
     
-    # 第二类：正则表达式规则（匹配 /^.*$/ ）
-    if line.startswith('^/'):
-        ignored.append(line)
-        continue
-    
     # 精确域名（domain_suffix）
     if line.startswith('||'):
         domain = re.sub(r'^\|\|', '', line)
