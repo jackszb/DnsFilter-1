@@ -379,7 +379,12 @@
         "^[\\w.-]*?\\.tracking\\.[\\w.-]*?\\.miui\\.com$",
         "^ads-[\\w.-]*?\\.xhscdn\\.com$",
         "^ads-[\\w.-]*?\\.tiktok\\.com$",
-        "^mon-[\\w.-]*?\\.byteoversea\\.com$"
+        "^mon-[\\w.-]*?\\.byteoversea\\.com$",
+        "^[\\w.-]*?-ad\\.sm\\.cn$",
+        "^[\\w.-]*?-ad\\.video\\.yximgs\\.com$",
+        "^[\\w.-]*?-ad\\.wtzw\\.com$",
+        "^[\\w.-]*?-be-pack-sign\\.pglstatp\\-toutiao\\.com$",
+        "^[\\w.-]*?-normal\\.zijieapi\\.com$"
       ]
     }
   ]
