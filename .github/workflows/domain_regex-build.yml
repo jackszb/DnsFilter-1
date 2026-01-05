@@ -19,13 +19,9 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install required Python libraries
-      run: |
-        python -m pip install --upgrade pip
-        pip install re
-
     - name: Run Python script to generate domain_regex.json
       run: |
+        python -m pip install --upgrade pip
         python generate_domain_regex_from_wildcard.py
 
     - name: Commit and push domain_regex.json
