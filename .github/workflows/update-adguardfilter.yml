@@ -1,0 +1,40 @@
+name: Update AdGuard Filter
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # 每天一次（UTC）
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install sing-box
+        run: |
+          curl -fsSL https://sing-box.app/install.sh | sh
+
+      - name: Build JSON files
+        run: |
+          python build_adguardfilter.py
+
+      - name: Compile SRS
+        run: |
+          sing-box rule-set compile adguardfilter.json
+
+      - name: Commit & Push
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+          git add domain_suffix.json adguardfilter.json adguardfilter.srs
+          git commit -m "Auto update AdGuard filter" || echo "No changes"
+          git push
