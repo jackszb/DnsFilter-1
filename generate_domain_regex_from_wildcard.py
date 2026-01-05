@@ -1,26 +1,31 @@
+import re
 import json
-import os
 
-def wildcard_to_regex(domain):
+def clean_regex(regex):
     """
-    将域名中的 '*' 替换为正则表达式中的 '.*'，用于匹配任意字符。
+    清理不必要的重复 .*
     """
-    # 处理域名中的通配符 '*'
-    domain = domain.replace('*', '.*')  # 将 * 替换为 .*
-    # 加上正则表达式的开始和结束符
-    return f"^{domain}$"
+    # 清理多余的 .* ，只保留一个
+    cleaned = re.sub(r'\.\*+', '.*', regex)
+    # 修复类似 'aan.amazon..*$' 为 'aan.amazon.*$'
+    cleaned = re.sub(r'\.\*\.', '.*.', cleaned)
+    return cleaned
 
 def process_wildcard_file(filename):
     """
     读取 wildcard.txt 文件，将其中的每个通配符域名转换为正则表达式。
     """
-    if not os.path.exists(filename):
-        raise FileNotFoundError(f"{filename} not found!")
-    
     with open(filename, "r") as file:
         lines = file.readlines()
-        # 对每个域名应用 wildcard_to_regex 转换
-        return [wildcard_to_regex(line.strip()) for line in lines if line.strip()]
+        # 对每个域名应用 wildcard_to_regex 转换并清理冗余部分
+        return [clean_regex(wildcard_to_regex(line.strip())) for line in lines if line.strip()]
+
+def wildcard_to_regex(domain):
+    """
+    将域名中的 '*' 替换为正则表达式中的 '.*'，用于匹配任意字符。
+    """
+    domain = domain.replace('*', '.*')  # 将 * 替换为 .*
+    return f"^{domain}$"
 
 def generate_sing_box_rule(wildcard_domains):
     """
@@ -40,19 +45,13 @@ def main():
     output_file = "domain_regex.json"  # 输出的 domain_regex.json 文件
     
     # 读取并转换域名
-    try:
-        wildcard_domains = process_wildcard_file(wildcard_file)
-        print(f"Read {len(wildcard_domains)} wildcard domains from {wildcard_file}")
-    except FileNotFoundError as e:
-        print(e)
-        return
+    wildcard_domains = process_wildcard_file(wildcard_file)
 
     # 生成 sing-box 规则文件
     rules = generate_sing_box_rule(wildcard_domains)
     
     # 写入 domain_regex.json 文件
     write_json_to_file(rules, output_file)
-    print(f"Generated {output_file}")
 
     # 打印生成的 domain_regex.json 文件内容确认
     with open(output_file, "r") as f:
