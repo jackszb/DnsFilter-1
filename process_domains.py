@@ -2,15 +2,6 @@ import re
 
 suffix = []   # 精确域名（不含通配符）
 wildcard = [] # 包含通配符的域名
-ignored = []  # 被忽略的域名/IP
-
-# 清空旧的输出文件
-with open('suffix.txt', 'w') as f:
-    pass
-with open('wildcard.txt', 'w') as f:
-    pass
-with open('ignored.txt', 'w') as f:
-    pass
 
 # 读取过滤列表
 with open('filter.txt', 'r') as f:
@@ -18,16 +9,16 @@ with open('filter.txt', 'r') as f:
 
 # 定义忽略规则：四类
 ignore_patterns = [
-    # 第一类：精确 IP 地址（IP 地址规则）
+    # 第一类：精确 IP 地址
     re.compile(r'^\|\|(\d{1,3}\.){3}\d{1,3}\^'),
     
-    # 第二类：正则表达式形式的 IP 地址（以 /^ 开头，以 $/ 结尾）
+    # 第二类：正则表达式形式的 IP 地址
     re.compile(r'^\/\^.*\^\/$'),
     
-    # 第三类：带通配符的 GIF 文件（通配符规则）
+    # 第三类：带通配符的 GIF 文件
     re.compile(r'.*\*.*\.gif$'),
     
-    # 第四类：以 @@ 开头的排除规则（AdGuard 特有规则）
+    # 第四类：以 @@ 开头的排除规则
     re.compile(r'^\@\@')
 ]
 
@@ -35,9 +26,8 @@ ignore_patterns = [
 for line in lines:
     line = line.strip()
 
-    # 如果匹配任何忽略规则，直接将其添加到 ignored.txt
+    # 如果匹配忽略规则，跳过当前行
     if any(pattern.match(line) for pattern in ignore_patterns):
-        ignored.append(line)
         continue
     
     # 精确域名（domain_suffix）
@@ -59,11 +49,4 @@ with open('suffix.txt', 'w') as f:
 with open('wildcard.txt', 'w') as f:
     f.write('\n'.join(wildcard))
 
-# 保存忽略的域名/IP 到 ignored.txt
-if ignored:  # 如果忽略列表有内容
-    with open('ignored.txt', 'w') as f:
-        f.write('\n'.join(ignored))
-else:
-    print("No ignored domains/IPs to write.")
-
-print('suffix.txt, wildcard.txt, and ignored.txt generated successfully!')
+print('suffix.txt and wildcard.txt generated successfully!')
