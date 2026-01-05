@@ -2,13 +2,19 @@ import re
 import json
 
 def convert_wildcards_to_regex(domain):
+    # 将 '*' 替换为 '.*' 以匹配任意字符
     domain = domain.replace("*", ".*")
-    domain = re.sub(r"([^.]+)\.([a-z]+)$", r"^\1(\\.[^.]+)*\\.\\2$", domain)
+    
+    # 修正正则表达式，移除不正确的 '^[^.' 和 \2
+    domain = re.sub(r"([^.]+)\.([a-z]+)$", r"^\1(\.[^.]+)*\.\2$", domain)
     domain = re.sub(r"^\*", "^([^.]+\\.)*", domain)
+
+    # 确保正则表达式以 ^ 开头，以 $ 结尾
     if not domain.startswith("^"):
         domain = "^" + domain
     if not domain.endswith("$"):
         domain = domain + "$"
+
     return domain
 
 def generate_sing_box_rule(domains):
