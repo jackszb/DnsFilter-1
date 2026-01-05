@@ -13,11 +13,14 @@ def convert_wildcards_to_regex(domain):
     # 替换域名中间或其他位置的 '*' 为 .*
     domain = re.sub(r"\*", r".*", domain)
 
-    # 如果 '*' 出现在后面，转换为 (\.[^.]+)*（匹配所有子域名和顶级域名）
+    # 处理域名结尾的 *，转换为 (\.[^.]+)* 来匹配任意数量的子域名
     if domain.endswith(".*"):
         domain = domain[:-2] + "(\.[^.]+)*$"
     elif not domain.endswith("$"):
         domain = domain + "$"
+
+    # 处理域名中可能出现的连续点
+    domain = re.sub(r"\.\.", ".", domain)
     
     return domain
 
