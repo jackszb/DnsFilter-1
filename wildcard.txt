@@ -208,6 +208,7 @@ log*.zijieapi.com
 log-*.epicdn.me
 log-*.previewnetworks.com
 log-*.zadn.vn
+log-v*-boot.capcutapi.com
 log-va*.capcutapi.com
 logger-*.dailymotion.com
 logreport-global-dual.cool*cloud.com
